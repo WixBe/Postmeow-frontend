@@ -54,6 +54,16 @@ const App: React.FC = () => {
     // Return the cleaned config without non-serializable fields
     return cleanedConfig;
   }
+
+  const handleSelectRequest = (request: any) => {
+    if (request.request) {
+      // Check if the request object is nested under the 'request' key (Postman v2.1 format)
+      setSelectedRequest(request.request);
+    } else {
+      // Handle direct requests (if using Postman v2.0 format)
+      setSelectedRequest(request);
+    }
+  };
   
   
 
@@ -115,7 +125,7 @@ const App: React.FC = () => {
 
   return (
     <div className="app">
-      <Sidebar onSelectRequest={(request) => setSelectedRequest(request)} />
+      <Sidebar onSelectRequest={handleSelectRequest} />
       <div className="main-pane">
         <ApiRequestForm
           setResponse={handleSendRequest}

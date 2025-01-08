@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { FaFolder, FaFolderOpen } from "react-icons/fa";
+import '../styles/Sidebar.css'
 
 interface sidebarProps {
     onSelectRequest: (request: any) => void;
@@ -35,48 +36,83 @@ const Sidebar: React.FC<sidebarProps> = ({ onSelectRequest }) => {
         }));
     };
 
-    const renderRequests = (requests: any[]) => {
-        return (
-            <ul>
-                {
-                    requests.map((request) => (
-                        <li
-                            key={request._id}
-                            onClick={() => onSelectRequest(request.request)}
-                            style={{ cursor: "pointer", color: '#bbb'}}
-                        >
-                            { request.name }
-                        </li>
-                    ))
-                }
-            </ul>
-        );
-    };
-
-    const renderFolders = (folders: any[]) => {
-        return folders.map((folder) => (
-          <li key={folder._id}>
-            <div onClick={() => toggleFolder(folder._id)} style={{ cursor: "pointer" }}>
-              {expandedFolders[folder._id] ? <FaFolderOpen /> : <FaFolder />} {folder.name}
-            </div>
-            {expandedFolders[folder._id] && folder.item && renderRequests(folder.item)}
-          </li>
-        ));
+    const renderRequests = (requests: any[], parentId: string) => {
+        return requests.map((request, index) => {
+          const requestKey = `${parentId}-${request._id ?? request.name ?? index}`;
+          const requestName = request.name ?? 'Unnamed Request';
+      
+          return (
+            <li
+              key={requestKey}
+              onClick={() => onSelectRequest(request)} // Pass the full request object
+              style={{ cursor: "pointer", color: '#bbb' }}
+              className="requests"
+            >
+              {requestName}
+            </li>
+          );
+        });
       };
-
+      
+      
+      
+      
+      
+      const renderFolders = (folders: any[], parentId: string) => {
+        return folders.map((folder, index) => {
+          const folderKey = `${parentId}-${folder._id ?? folder.name ?? index}`;
+          const folderName = folder.name ?? 'Unnamed Folder';
+      
+          return (
+            <li key={folderKey}>
+              <div onClick={() => toggleFolder(folder._id ?? folderKey)} style={{ cursor: "pointer" }}>
+                {expandedFolders[folder._id ?? folderKey] ? <FaFolderOpen /> : <FaFolder />} {folderName}
+              </div>
+              {expandedFolders[folder._id ?? folderKey] && folder.item && (
+                <ul className="folders">
+                  {renderFolders(folder.item.filter((item) => item.item), folderKey)}
+                  {renderRequests(folder.item.filter((item) => item.request), folderKey)}
+                </ul>
+              )}
+            </li>
+          );
+        });
+      };
+      
+      
+      
+      
+      
+      
       const renderCollections = () => {
-        return collections.map((collection) => (
-          <li key={collection._id}>
-            <div onClick={() => toggleCollection(collection._id)} style={{ cursor: "pointer" }}>
-              {expandedCollections[collection._id] ? <FaFolderOpen /> : <FaFolder />}{" "}
-              {collection.info.name}
-            </div>
-            {expandedCollections[collection._id] && collection.item && (
-              <ul>{renderFolders(collection.item)}</ul>
-            )}
-          </li>
-        ));
+        return collections.map((collection) => {
+          const collectionName = collection.info?.name ?? collection.name ?? 'Unnamed Collection';
+      
+          // Separate folders and requests correctly
+          const folders = (collection.item ?? []).filter((item) => item.item); // Folders have nested items
+          const requests = (collection.item ?? []).filter((item) => item.request); // Requests have a request object
+      
+          return (
+            <li key={collection._id}>
+              <div onClick={() => toggleCollection(collection._id)} style={{ cursor: "pointer" }}>
+                {expandedCollections[collection._id] ? <FaFolderOpen /> : <FaFolder />} {collectionName}
+              </div>
+              {expandedCollections[collection._id] && (
+                <ul>
+                  {renderFolders(folders, collection._id)}
+                  {renderRequests(requests, collection._id)}
+                </ul>
+              )}
+            </li>
+          );
+        });
       };
+      
+      
+      
+      
+      
+      
 
     return (
         <div className="sidebar">
