@@ -70,8 +70,8 @@ const Sidebar: React.FC<sidebarProps> = ({ onSelectRequest }) => {
               </div>
               {expandedFolders[folder._id ?? folderKey] && folder.item && (
                 <ul className="folders">
-                  {renderFolders(folder.item.filter((item) => item.item), folderKey)}
-                  {renderRequests(folder.item.filter((item) => item.request), folderKey)}
+                  {renderFolders(folder.item.filter((item: { item: any; }) => item.item), folderKey)}
+                  {renderRequests(folder.item.filter((item: { request: any; }) => item.request), folderKey)}
                 </ul>
               )}
             </li>
@@ -89,8 +89,8 @@ const Sidebar: React.FC<sidebarProps> = ({ onSelectRequest }) => {
           const collectionName = collection.info?.name ?? collection.name ?? 'Unnamed Collection';
       
           // Separate folders and requests correctly
-          const folders = (collection.item ?? []).filter((item) => item.item); // Folders have nested items
-          const requests = (collection.item ?? []).filter((item) => item.request); // Requests have a request object
+          const folders = (collection.item ?? []).filter((item: { item: any; }) => item.item); // Folders have nested items
+          const requests = (collection.item ?? []).filter((item: { request: any; }) => item.request); // Requests have a request object
       
           return (
             <li key={collection._id}>
