@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import '../styles/APiRequestForm.css'; 
 
 interface ApiRequestFormProps {
   setResponse: (response: any) => void;
@@ -95,10 +96,10 @@ const ApiRequestForm: React.FC<ApiRequestFormProps> = ({
                   value={param.value}
                   onChange={(e) => handleParameterChange(index, param.key, e.target.value)}
                 />
-                <button onClick={() => handleRemoveParameter(index)}>Remove</button>
+                <button onClick={() => handleRemoveParameter(index)} className="rmParam">Remove</button>
               </div>
             ))}
-            <button onClick={handleAddParameter}>Add Parameter</button>
+            <button onClick={handleAddParameter} className="addParam">Add Parameter</button>
           </div>
         );
 
