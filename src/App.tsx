@@ -24,13 +24,13 @@ const App: React.FC = () => {
   }
 
   // Helper function to deserialize a plain object back into FormData
-  // function deserializeFormData(data: Record<string, string>): FormData {
-  //   const formData = new FormData();
-  //   Object.entries(data).forEach(([key, value]) => {
-  //     formData.append(key, value);
-  //   });
-  //   return formData;
-  // }
+  function deserializeFormData(data: Record<string, string>): FormData {
+    const formData = new FormData();
+    Object.entries(data).forEach(([key, value]) => {
+      formData.append(key, value);
+    });
+    return formData;
+  }
 
   // Helper function to clean the Axios config by removing unwanted fields
   function cleanConfig(config: AxiosRequestConfig): AxiosRequestConfig {
@@ -99,8 +99,10 @@ const App: React.FC = () => {
         responseTime: Math.round(endTime - startTime),
       });
   
+       
+
       // Step 7: Update the UI with the fetched response
-      setResponse(cleanedConfig);
+      setResponse({ ...cleanedConfig, data: requestData });
       setStatusCode(res.status);
       setResponseTime(Math.round(endTime - startTime));
     } catch (error: any) {
