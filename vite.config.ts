@@ -1,13 +1,23 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
 
-// https://vite.dev/config/
 export default defineConfig({
+  base: '/',
   plugins: [react()],
   server: {
-    port: process.env.PORT 
+    port: 4140
   },
-  headers: {
-    'Content-Type': 'application/javascript' 
-  }
-})
+  build: {
+    outDir: 'dist',
+    assetsDir: 'assets',
+    sourcemap: true,
+    // Ensure service worker is copied to build output
+    rollupOptions: {
+      input: {
+        main: './index.html',
+        'service-worker': './public/service-worker.js'
+      }
+    }
+  },
+  publicDir: 'public'
+});
