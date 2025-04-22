@@ -36,13 +36,23 @@ To set up the project locally, follow these steps:
     ```bash
     npm install
     ```
-4. Start the development server
+4. Set up environment variables:
+    - Create a .env file in the root directory.
+    - Add the following variables
+    ```code
+    REACT_APP_API_URL=http://localhost:4000
+    ```
+5. Start the development server
     ```bash
     npm start
     ```
 
 ## Usage
 
+Visit http://localhost:3000 in your browser to interact with the application. Ensure that the backend server is running at http://localhost:4000. \
+Backend src: https://github.com/WixBe/Postmeow-backend
+
+## Directory Structure
 ```plaintext
     .
 ├── src/                # Source code for the application
